@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MTF Web Font Test Page</title>
+
+<!--
+  ============================================================
+  MTF WEB FONT TEST PAGE
+  Purpose: load a Monotype Fonts (MTF) Web Project kit in a real
+  browser so that usage / page views (PVs) show up in the MTF admin.
+
+  HOW TO USE
+  1. In MTF, open your Web Project > Embed Code.
+  2. Copy the CSS link (and the JS link if you use the
+     "JavaScript + CSS" tab) from the dialog.
+  3. EITHER paste them into the CONFIG block just below,
+     OR paste them into the form on the page,
+     OR open this file with  ?css=<cssLink>&js=<jsLink>&families=Name1,Name2
+  4. Open the page from a web server (or locally) and reload it
+     a few times. Each load requests the kit from the Monotype CDN.
+
+  The real embed snippet is what MTF itself generates:
+    Sync  (CSS only):
+      <link rel="preconnect" href="https://cdn.fonts.net">
+      <link href="{cssLink}" rel="stylesheet" />
+    Async (JS + CSS, recommended in MTF):
+      <link rel="preconnect" href="https://cdn.fonts.net">
+      <script type="text/javascript" src="{enhancedJsLink}" async></script>
+      <link rel="stylesheet" type="text/css" href="{enhancedCssLink}" />
+  ============================================================
+-->
+
+<script>
+  // ------------------------------------------------------------
+  // CONFIG: fill these in from the MTF "Embed Code" dialog.
+  // Leave blank to use the form on the page or URL parameters.
+  // ------------------------------------------------------------
+  window.MTF_TEST_CONFIG = {
+    // e.g. https://cdn.fonts.net/kit/<projectId>/<projectId>.css
+    // Web project "MTF PV Test Page" (Helvetica Now Pro Text Regular + Bold)
+    cssLink: "https://cdn.fonts.net/kit/c41ca25c-9670-475c-8ef8-05825abc737c/c41ca25c-9670-475c-8ef8-05825abc737c.css",
+    // optional, async mode only: .../<projectId>_enhanced.js
+    jsLink: "",
+    // font-family names as shown in the "Font style CSS" part of the dialog,
+    // e.g. ["GilroyUltraLight", "GilroyBold"]
+    families: ["HelveticaNowText"]
+  };
+</script>
+
+<style>
+  :root {
+    --ink: #1c1d21;
+    --muted: #5f6470;
+    --line: #dfe2e8;
+    --bg: #f6f7f9;
+    --card: #ffffff;
+    --accent: #1f5fd1;
+    --ok: #1a7f4b;
+    --warn: #a55a00;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    /* system fonts for the page chrome so the MTF fonts stand out in the samples only */
+    font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Yu Gothic", Arial, sans-serif;
+  }
+  header, main { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+  header { padding-top: 32px; }
+  h1 { font-size: 24px; margin: 0 0 6px; }
+  h2 { font-size: 16px; margin: 0 0 12px; }
+  p.lead { color: var(--muted); margin: 0 0 20px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-bottom: 18px;
+  }
+  label { display: block; font-weight: 600; margin: 12px 0 4px; font-size: 13px; }
+  label small { font-weight: 400; color: var(--muted); }
+  input[type=text], textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    font: 13px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; align-items: center; }
+  button {
+    background: var(--accent); color: #fff; border: 0; border-radius: 6px;
+    padding: 8px 14px; font: inherit; font-weight: 600; cursor: pointer;
+  }
+  button.secondary { background: #fff; color: var(--accent); border: 1px solid var(--accent); }
+  .status { font-size: 13px; padding: 8px 10px; border-radius: 6px; background: #eef1f6; }
+  .status.ok { background: #e6f4ec; color: var(--ok); }
+  .status.warn { background: #fff3e0; color: var(--warn); }
+  .sample { border-top: 1px solid var(--line); padding: 14px 0; }
+  .sample:first-of-type { border-top: 0; }
+  .sample .meta { font: 12px ui-monospace, Menlo, Consolas, monospace; color: var(--muted); margin-bottom: 6px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .badge { padding: 1px 8px; border-radius: 999px; font-size: 11px; background: #eef1f6; }
+  .badge.ok { background: #e6f4ec; color: var(--ok); }
+  .badge.fail { background: #fdeaea; color: #b3261e; }
+  .big { font-size: 40px; line-height: 1.2; margin: 0; word-break: break-word; }
+  .mid { font-size: 20px; margin: 6px 0 0; }
+  .small { font-size: 14px; margin: 6px 0 0; color: #333; }
+  pre { background: #11141a; color: #d8def0; padding: 12px 14px; border-radius: 8px; overflow: auto; font-size: 12.5px; margin: 8px 0 0; }
+  ul.tips { margin: 6px 0 0; padding-left: 18px; color: var(--muted); }
+  footer { max-width: 960px; margin: 0 auto; padding: 0 20px 40px; color: var(--muted); font-size: 12.5px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>MTF Web Font Test Page</h1>
+  <p class="lead">
+    A plain test page that loads a Monotype Fonts web project kit, so real page views
+    and usage can be generated and checked in the MTF admin (Usage &gt; Web Projects).
+  </p>
+</header>
+
+<main>
+
+  <section class="card">
+    <h2>1. Web project embed code</h2>
+    <label for="cssLink">CSS link <small>(from MTF &gt; Web Project &gt; Embed Code)</small></label>
+    <input id="cssLink" type="text" placeholder="https://cdn.fonts.net/kit/&lt;projectId&gt;/&lt;projectId&gt;.css">
+
+    <label for="jsLink">JS link <small>(optional, only for the async "JavaScript + CSS" option)</small></label>
+    <input id="jsLink" type="text" placeholder="https://cdn.fonts.net/kit/&lt;projectId&gt;/&lt;projectId&gt;_enhanced.js">
+
+    <label for="families">Font-family names <small>(comma separated, as shown under "Font style CSS" in the dialog)</small></label>
+    <input id="families" type="text" placeholder="GilroyUltraLight, GilroyBold">
+
+    <div class="row">
+      <button id="applyBtn" type="button">Load fonts</button>
+      <button id="reloadBtn" type="button" class="secondary" title="Reloads this page, which requests the kit again">Reload page (new page view)</button>
+      <span id="pvCounter" class="badge">Page loads in this tab: 0</span>
+    </div>
+    <div class="row">
+      <div id="status" class="status">No kit loaded yet. Paste the links above and press "Load fonts".</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>2. Font samples</h2>
+    <div id="samples">
+      <p style="color:var(--muted);margin:0">Samples will appear here once font-family names are entered.</p>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>3. Snippet this page is using</h2>
+    <pre id="snippet">(nothing loaded yet)</pre>
+  </section>
+
+  <section class="card">
+    <h2>Checking the numbers in MTF</h2>
+    <ul class="tips">
+      <li>Open the MTF admin Usage report and go to the Web Projects tab, then filter to this project and the current date range.</li>
+      <li>Usage and page views are reported by the MTF analytics pipeline, so figures may not appear immediately after a load. Check again after some time.</li>
+      <li>If the project restricts allowed domains, the domain this page is served from must be on that list for the load to be counted.</li>
+      <li>Use the reload button (or open the page in several tabs and browsers) to produce more page views.</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer>
+  Test page only. It contains no Monotype credentials; it just references the public kit URL that MTF generates.
+</footer>
+
+<script>
+(function () {
+  var cfg = window.MTF_TEST_CONFIG || {};
+  var params = new URLSearchParams(location.search);
+
+  var el = {
+    css: document.getElementById('cssLink'),
+    js: document.getElementById('jsLink'),
+    fam: document.getElementById('families'),
+    status: document.getElementById('status'),
+    samples: document.getElementById('samples'),
+    snippet: document.getElementById('snippet'),
+    pv: document.getElementById('pvCounter')
+  };
+
+  // Count loads in this tab (sessionStorage is fine for a local test page; guarded in case it is blocked)
+  var loads = 0;
+  try {
+    loads = parseInt(sessionStorage.getItem('mtfTestLoads') || '0', 10) + 1;
+    sessionStorage.setItem('mtfTestLoads', String(loads));
+  } catch (e) { loads = 1; }
+  el.pv.textContent = 'Page loads in this tab: ' + loads;
+
+  // Initial values: URL params win, then CONFIG block
+  el.css.value = params.get('css') || cfg.cssLink || '';
+  el.js.value = params.get('js') || cfg.jsLink || '';
+  el.fam.value = params.get('families') || (cfg.families || []).join(', ');
+
+  function setStatus(msg, kind) {
+    el.status.textContent = msg;
+    el.status.className = 'status' + (kind ? ' ' + kind : '');
+  }
+
+  function isSafeUrl(u) {
+    try {
+      var x = new URL(u);
+      return x.protocol === 'https:' || x.protocol === 'http:';
+    } catch (e) { return false; }
+  }
+
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+
+  function removeOld() {
+    document.querySelectorAll('[data-mtf-injected]').forEach(function (n) { n.remove(); });
+  }
+
+  function inject(tag, attrs) {
+    var n = document.createElement(tag);
+    Object.keys(attrs).forEach(function (k) { n.setAttribute(k, attrs[k]); });
+    n.setAttribute('data-mtf-injected', '1');
+    document.head.appendChild(n);
+    return n;
+  }
+
+  function buildSnippet(css, js) {
+    var host = '';
+    try { host = new URL(css).origin; } catch (e) {}
+    var lines = [];
+    if (host) lines.push('<link rel="preconnect" href="' + host + '">');
+    if (js) {
+      lines.push('<script type="text/javascript" src="' + js + '" async><\/script>');
+      lines.push('<link rel="stylesheet" type="text/css" href="' + css + '" />');
+    } else {
+      lines.push('<link href="' + css + '" rel="stylesheet" />');
+    }
+    return lines.join('\n');
+  }
+
+  function renderSamples(families) {
+    if (!families.length) {
+      el.samples.innerHTML = '<p style="color:var(--muted);margin:0">Enter at least one font-family name to see samples.</p>';
+      return;
+    }
+    var html = families.map(function (f, i) {
+      var ff = "'" + f.replace(/'/g, '') + "', Georgia, serif";
+      return '' +
+        '<div class="sample">' +
+          '<div class="meta"><span>font-family: ' + esc(f) + '</span><span class="badge" id="badge' + i + '">checking...</span></div>' +
+          '<p class="big" style="font-family:' + esc(ff) + '">Hamburgefonstiv 0123456789</p>' +
+          '<p class="mid" style="font-family:' + esc(ff) + '">The quick brown fox jumps over the lazy dog.</p>' +
+          '<p class="mid" style="font-family:' + esc(ff) + ';font-weight:700">Bold (700): The quick brown fox jumps over the lazy dog.</p>' +
+          '<p class="small" style="font-family:' + esc(ff) + '">日本語のサンプルテキスト。ひらがな、カタカナ、漢字 (if the font supports Japanese).</p>' +
+        '</div>';
+    }).join('');
+    el.samples.innerHTML = html;
+  }
+
+  function verify(families) {
+    if (!document.fonts || !document.fonts.load) return;
+    families.forEach(function (f, i) {
+      var badge = document.getElementById('badge' + i);
+      var name = f.replace(/'/g, '');
+      var spec = "32px '" + name + "'";
+      var specBold = "700 32px '" + name + "'";
+      // Give the CSS + font file time to arrive, then ask the browser whether the face is available.
+      Promise.all([
+        document.fonts.load(spec, 'Hamburgefonstiv'),
+        document.fonts.load(specBold, 'Hamburgefonstiv')
+      ]).then(function (res) {
+        var ok = res[0] && res[0].length > 0 && document.fonts.check(spec);
+        badge.textContent = ok ? 'loaded from kit' : 'not found (showing fallback)';
+        badge.className = 'badge ' + (ok ? 'ok' : 'fail');
+        refreshOverall();
+      }).catch(function () {
+        badge.textContent = 'failed to load';
+        badge.className = 'badge fail';
+        refreshOverall();
+      });
+    });
+  }
+
+  function refreshOverall() {
+    var badges = document.querySelectorAll('.sample .badge');
+    var done = 0, ok = 0;
+    badges.forEach(function (b) {
+      if (b.textContent !== 'checking...') done++;
+      if (b.classList.contains('ok')) ok++;
+    });
+    if (done === badges.length && badges.length) {
+      if (ok === badges.length) {
+        setStatus('Kit loaded and all ' + ok + ' font(s) are rendering. This page load has requested the kit from the CDN.', 'ok');
+      } else {
+        setStatus(ok + ' of ' + badges.length + ' font(s) rendered. Check the family names against the "Font style CSS" in the Embed Code dialog, and that this domain is allowed for the project.', 'warn');
+      }
+    }
+  }
+
+  function apply() {
+    var css = el.css.value.trim();
+    var js = el.js.value.trim();
+    var fams = el.fam.value.split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+
+    removeOld();
+
+    if (!css) {
+      setStatus('Please paste the CSS link from the MTF Embed Code dialog.', 'warn');
+      el.snippet.textContent = '(nothing loaded yet)';
+      renderSamples(fams);
+      return;
+    }
+    if (!isSafeUrl(css) || (js && !isSafeUrl(js))) {
+      setStatus('The link does not look like a valid http(s) URL.', 'warn');
+      return;
+    }
+
+    try { inject('link', { rel: 'preconnect', href: new URL(css).origin }); } catch (e) {}
+    if (js) inject('script', { type: 'text/javascript', src: js, async: '' });
+
+    var linkEl = inject('link', js ? { rel: 'stylesheet', type: 'text/css', href: css } : { rel: 'stylesheet', href: css });
+    linkEl.addEventListener('error', function () {
+      setStatus('The CSS could not be loaded. Check the link, your network, and the project domain settings.', 'warn');
+    });
+    linkEl.addEventListener('load', function () {
+      setStatus('CSS received from the CDN. Checking fonts...');
+      verify(fams);
+    });
+
+    el.snippet.textContent = buildSnippet(css, js);
+    renderSamples(fams);
+    setStatus('Requesting kit from the CDN...');
+  }
+
+  document.getElementById('applyBtn').addEventListener('click', apply);
+  document.getElementById('reloadBtn').addEventListener('click', function () {
+    // Keep the entered values across reloads by writing them into the URL
+    var p = new URLSearchParams();
+    if (el.css.value.trim()) p.set('css', el.css.value.trim());
+    if (el.js.value.trim()) p.set('js', el.js.value.trim());
+    if (el.fam.value.trim()) p.set('families', el.fam.value.trim());
+    location.search = p.toString();
+  });
+
+  // Auto-load if anything was provided via CONFIG or URL
+  if (el.css.value) apply();
+})();
+</script>
+</body>
+</html>
